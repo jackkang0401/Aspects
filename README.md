@@ -149,87 +149,10 @@ You can use the invocation object to customize the return value:
     } error:NULL];
 ```
 
-Installation
-------------
-The simplest option is to use `pod "Aspects"`.
+### 相关资料
 
-You can also add the two files `Aspects.h/m` to your project. There are no further requirements.
+[iOS 如何实现Aspect Oriented Programming (上)][1]
+[iOS 如何实现Aspect Oriented Programming (下)][2]
 
-Compatibility and Limitations
------------------------------
-Aspects uses quite some runtime trickery to achieve what it does. You can mostly mix this with regular method swizzling.
-
-An important limitation is that for class-based hooking, a method can only be hooked once within the subclass hierarchy. [See #2](https://github.com/steipete/Aspects/issues/2)
-This does not apply for objects that are hooked. Aspects creates a dynamic subclass here and has full control.
-
-KVO works if observers are created after your calls `aspect_hookSelector:` It most likely will crash the other way around. Still looking for workarounds here - any help appreciated.
-
-Because of ugly implementation details on the ObjC runtime, methods that return unions that also contain structs might not work correctly unless this code runs on the arm64 runtime.
-
-Credits
--------
-The idea to use `_objc_msgForward` and parts of the `NSInvocation` argument selection is from the excellent [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) from the GitHub guys. [This article](http://codeshaker.blogspot.co.at/2012/01/aop-delivered.html) explains how it works under the hood.
-
-
-Supported iOS & SDK Versions
------------------------------
-
-* Aspects requires ARC.
-* Aspects is tested with iOS 7+ and OS X 10.7 or higher.
-
-License
--------
-MIT licensed, Copyright (c) 2014 Peter Steinberger, steipete@gmail.com, [@steipete](http://twitter.com/steipete)
-
-
-Release Notes
------------------
-
-Version 1.4.2
-
-- Allow to hook different subclasses.
-- Smaller tweaks.
-
-Version 1.4.1
-
-- Rename error codes.
-
-Version 1.4.0
-
-- Add support for block signatures that match method signatures. (thanks to @nickynick)
-
-Version 1.3.1
-
-- Add support for OS X 10.7 or higher. (thanks to @ashfurrow)
-
-Version 1.3.0
-
-- Add automatic deregistration.
-- Checks if the selector exists before trying to hook.
-- Improved dealloc hooking. (no more unsafe_unretained needed)
-- Better examples.
-- Always log errors.
-
-Version 1.2.0
-
-- Adds error parameter.
-- Improvements in subclassing registration tracking.
-
-Version 1.1.0
-
-- Renamed the files from NSObject+Aspects.m/h to just Aspects.m/h.
-- Removing now works via calling `remove` on the aspect token.
-- Allow hooking dealloc.
-- Fixes infinite loop if the same method is hooked for multiple classes. Hooking will only work for one class in the hierarchy.
-- Additional checks to prevent things like hooking retain/release/autorelease or forwardInvocation:
-- The original implementation of forwardInvocation is now correctly preserved.
-- Classes are properly cleaned up and restored to the original state after the last hook is deregistered.
-- Lots and lots of new test cases!
-
-Version 1.0.1
-
-- Minor tweaks and documentation improvements.
-
-Version 1.0.0
-
-- Initial release
+[1]: https://www.jianshu.com/p/dc9dca24d5de "iOS 如何实现Aspect Oriented Programming (上)"
+[2]: https://www.jianshu.com/p/2ad7e90b521b "iOS 如何实现Aspect Oriented Programming (下)"
