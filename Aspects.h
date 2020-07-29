@@ -16,7 +16,7 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
 };
 
 /// Opaque Aspect Token that allows to deregister the hook.
-@protocol AspectToken <NSObject>
+@protocol AspectToken <NSObject>    // 这里的 Aspect Token 是隐式的，允许我们调用 remove 去撤销一个 hook
 
 /// Deregisters an aspect.
 /// @return YES if deregistration is successful, otherwise NO.
@@ -25,16 +25,16 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
 @end
 
 /// The AspectInfo protocol is the first parameter of our block syntax.
-@protocol AspectInfo <NSObject>
+@protocol AspectInfo <NSObject>         // block 语法里面的第一个参数
 
 /// The instance that is currently hooked.
-- (id)instance;
+- (id)instance;                         // 被 hook 的实例
 
 /// The original invocation of the hooked method.
-- (NSInvocation *)originalInvocation;
+- (NSInvocation *)originalInvocation;   // 被 hook方法的原始的 invocation
 
 /// All method arguments, boxed. This is lazily evaluated.
-- (NSArray *)arguments;
+- (NSArray *)arguments;                 // 方法的参数
 
 @end
 
