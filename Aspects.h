@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
+/// 标记 aspect 时机
 typedef NS_OPTIONS(NSUInteger, AspectOptions) {
     AspectPositionAfter   = 0,            /// Called after the original implementation (default)
     AspectPositionInstead = 1,            /// Will replace the original implementation.
