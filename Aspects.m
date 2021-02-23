@@ -337,7 +337,7 @@ static void aspect_cleanupHookedClassAndSelector(NSObject *self, SEL selector) {
     AspectsContainer *container = aspect_getContainerForObject(self, selector);
     if (!container.hasAspects) {
         // Destroy the container
-        aspect_destroyContainerForObject(self, selector);
+        aspect_destroyContainerForObject(self, selector);               // 删除 AspectsContainer
 
         // Figure out how the class was modified to undo the changes.
         NSString *className = NSStringFromClass(klass);
@@ -626,7 +626,7 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
         NSMutableDictionary *swizzledClassesDict = aspect_getSwizzledClassesDict();
         Class currentClass = [self class];
 
-        AspectTracker *tracker = swizzledClassesDict[currentClass];
+        AspectTracker *tracker = swizzledClassesDict[currentClass]; // 1.验证子类是否已 hook
         if ([tracker subclassHasHookedSelectorName:selectorName]) {
             NSSet *subclassTracker = [tracker subclassTrackersHookingSelectorName:selectorName];
             NSSet *subclassNames = [subclassTracker valueForKey:@"trackedClassName"];
@@ -635,7 +635,7 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
             return NO;
         }
 
-        do {
+        do {                                                        // 2.验证父类是否已 hook
             tracker = swizzledClassesDict[currentClass];
             if ([tracker.selectorNames containsObject:selectorName]) {
                 if (klass == currentClass) {
@@ -651,7 +651,7 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
         // Add the selector as being modified.
         currentClass = klass;
         AspectTracker *subclassTracker = nil;
-        do {
+        do {                                                        // 3.子类—>父类依次添加 tracker
             tracker = swizzledClassesDict[currentClass];
             if (!tracker) {
                 tracker = [[AspectTracker alloc] initWithTrackedClass:currentClass];
@@ -703,7 +703,7 @@ static void aspect_deregisterTrackedSelector(id self, SEL selector) {
 #pragma mark - AspectTracker
 
 
-/// 保存 class 的 tracker 信息
+/// 记录 class 的继承树上的 hook 信息
 @implementation AspectTracker
 
 - (id)initWithTrackedClass:(Class)trackedClass {
